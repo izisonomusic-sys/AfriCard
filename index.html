@@ -72,7 +72,7 @@ function renderNumberMessages(){const host=$('myNumberMessages');host.replaceChi
 async function loadNumberOrders(){try{const d=await numberApi({action:'orders'});cachedNumberOrders=d.orders||[];renderNumberOrders();renderNumberMessages()}catch(e){$('myNumberOrders').textContent=e.message}}
 async function refreshNumberOrder(id){try{await numberApi({action:'status',order_id:id});await loadNumberOrders()}catch(e){numberStatus(e.message,'error')}}
 async function finishNumberOrder(id){try{await numberApi({action:'finish',order_id:id});await loadNumberOrders()}catch(e){numberStatus(e.message,'error')}}
-document.querySelectorAll('[data-number-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-number-tab]').forEach(x=>x.classList.toggle('active',x===b));$('myNumberOrders').classList.toggle('hidden',b.dataset.numberTab!=='orders');$('myNumberMessages').classList.toggle('hidden',b.dataset.numberTab!=='messages')});
+document.querySelectorAll('[data-number-tab]').forEach(b=>b.onclick=async()=>{document.querySelectorAll('[data-number-tab]').forEach(x=>x.classList.toggle('active',x===b));$('myNumberOrders').classList.toggle('hidden',b.dataset.numberTab!=='orders');$('myNumberMessages').classList.toggle('hidden',b.dataset.numberTab!=='messages');if(b.dataset.numberTab==='messages'){try{await Promise.all(cachedNumberOrders.filter(o=>['waiting_sms','pending'].includes(o.status)).map(o=>numberApi({action:'status',order_id:o.id})));await loadNumberOrders()}catch(e){numberStatus(e.message,'error')}}});
 $('refreshNumberOrders').onclick=loadNumberOrders;
 
 function notice(t,type=''){const n=$('status');n.textContent=t;n.className='notice '+type}
