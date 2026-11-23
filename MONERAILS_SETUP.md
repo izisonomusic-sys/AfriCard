@@ -12,7 +12,7 @@ Webhook URL:
 
 Set these in Supabase → Project Settings → Edge Functions → Secrets:
 
-- `MONERAILS_API_KEY`: API key from the Monerails business account. Use an Owner or Finance key because cardholder verification and card issuance require those roles. Use a test key for test mode, then replace it with the live key after KYB approval.
+- `MONERAILS_API_KEY`: API key from the Monerails business account. Use an Owner or Finance key because cardholder verification and card issuance require those roles. Use a live key only in this production Supabase project. Test keys are deliberately blocked here; use a separate staging Supabase project for test mode.
 - `MONERAILS_WEBHOOK_SECRET`: signing secret (`whsec_...`) returned when the webhook endpoint is created in Monerails. Never put it in the browser or GitHub.
 
 Do not send either secret through chat or commit it to the repository.
@@ -51,4 +51,4 @@ Monerails sends `Monerail-Signature`; the Edge Function verifies the HMAC-SHA256
 - Monerails cards balance funded. Its card documentation currently specifies a minimum crypto top-up of USD 100.
 - Monerails webhook created and its signing secret stored in Supabase.
 - Didit Live account funded and its webhook secret stored in Supabase.
-- Complete test-mode end-to-end checks before switching to live keys.
+- Complete test-mode end-to-end checks in a separate staging Supabase project. The production Edge Function rejects `mr_test_` keys and ignores non-live webhook events.
