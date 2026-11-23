@@ -153,7 +153,21 @@ async function startDiditVerification(){
   status.textContent='Votre vérification Didit est prête. Ouverture de la page sécurisée…';status.className='notice success';
   if(popup)popup.location.href=data.url;else window.location.href=data.url;
   await loadMyKyc();
- }catch(err){if(popup)popup.close();status.textContent=err.message||'Impossible de démarrer la vérification. Réessayez plus tard.';status.className='notice error';}
+ }catch(err){
+  if(popup)popup.close();
+  let message=err?.message||'Impossible de démarrer la vérification. Réessayez plus tard.';
+  const response=err?.context;
+  if(response&&typeof response.clone==='function'){
+   try{
+    const payload=await response.clone().json();
+    if(payload?.error)message=payload.error;
+    if(payload?.provider_status)message+=' (Code fournisseur : '+payload.provider_status+')';
+    if(payload?.provider_message)message+=' — '+String(payload.provider_message).slice(0,220);
+   }catch{}
+  }
+  if(/Edge Function returned a non-2xx status code/i.test(message))message='La demande de vérification a été refusée par le service. Vérifiez la configuration Didit Live et le crédit du compte, puis réessayez.';
+  status.textContent=message;status.className='notice error';
+ }
  finally{btn.disabled=false}
 }
 $('startDiditKyc').addEventListener('click',startDiditVerification);
