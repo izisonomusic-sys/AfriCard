@@ -29,7 +29,7 @@ Monerails sends `Monerail-Signature`; the Edge Function verifies the HMAC-SHA256
 
 ## Supported customer flows
 
-- Wallet deposit: `create_collection`, `check_collection`, `authorize_collection`, `resend_collection_otp`.
+- Wallet deposit: `list_operators` loads live XOF mobile-money operators for the eight supported UEMOA countries; `create_collection`, `check_collection`, `authorize_collection`, and `resend_collection_otp` handle payment and confirmation.
 - Issuer cardholder onboarding: `create_cardholder`. Didit must first approve the AfriCard profile. Monerails separately requires the cardholder's identity details and document image(s); the form sends the images directly to Monerails and does not store the raw images in AfriCard.
 - Card issue: `create_card`. Server-side wallet debit is atomic and idempotent. A confirmed issuer failure refunds the debit. An uncertain provider response stays pending until webhook reconciliation.
 - Card funding: `fund_card`. The amount is converted from XOF to USD cents, debited atomically, then sent to Monerails. Confirmed provider failures are refunded.
