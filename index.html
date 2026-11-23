@@ -128,7 +128,7 @@ async function loadMyKyc(){
   msg.textContent=s==='Approved'?'Votre identité a été vérifiée et approuvée par Didit. Vous pouvez poursuivre votre demande de carte.':s==='Declined'?'Didit n’a pas pu valider votre identité. Vous pouvez recommencer la vérification.':s==='In Review'?'Votre dossier est examiné par Didit. AfriCard sera informé du résultat.':'Votre vérification Didit est en cours. Reprenez-la si nécessaire.';
   feedback.textContent='Référence de vérification : '+d.session_id;
   diditStatus.textContent=s==='Approved'?'Vérification réussie. Votre profil AfriCard sera mis à jour automatiquement.':s==='In Review'?'Votre dossier est en cours d’examen chez Didit.':'Dernier statut Didit : '+(labels[s]||s)+'.';
-  if(s==='Approved'){$('startDiditKyc').classList.add('hidden');$('diditConsent').disabled=true;$('showManualKyc').classList.add('hidden');$('kycManualSection').classList.add('hidden');}
+  if(s==='Approved'){$('startDiditKyc').classList.add('hidden');$('diditConsent').disabled=true;$('showManualKyc').classList.add('hidden');$('kycManualSection').classList.add('hidden');const p=await supabase.from('profiles').select('full_name').eq('id',currentUser.id).maybeSingle();if(p.data?.full_name)$('profileName').textContent=p.data.full_name;}
   else {$('startDiditKyc').classList.remove('hidden');$('diditConsent').disabled=false;}
   return;
  }
