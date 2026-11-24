@@ -1,4 +1,4 @@
-const CACHE_NAME = 'africard-shell-v31';
+const CACHE_NAME = 'africard-shell-v32';
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
 self.addEventListener('message', event => { if (event.data?.type === 'SKIP_WAITING') self.skipWaiting(); });
 self.addEventListener('install', event => {
